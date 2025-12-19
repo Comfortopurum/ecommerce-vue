@@ -1,20 +1,30 @@
+
+
 <script setup>
 import { onMounted, ref } from 'vue'
 import { getAllProducts } from '@/api/products'
 import ExploreProductCard from './ExploreProductCard.vue'
 
 const products = ref([])
+const loading = ref(true) 
 
 onMounted(async () => {
-  const { data } = await getAllProducts()
+  try {
+    const { data } = await getAllProducts()
 
-  products.value = data.slice(0, 8).map((p, i) => ({
-    ...p,
-    rating: Math.floor(Math.random() * 300),
-    isNew: i % 3 === 0,
-  }))
+    products.value = data.slice(0, 8).map((p, i) => ({
+      ...p,
+      rating: Math.floor(Math.random() * 300),
+      isNew: i % 3 === 0,
+    }))
+  } finally {
+    loading.value = false 
+  }
 })
 </script>
+
+
+
 
 <template>
   <section class="mt-24">
@@ -36,8 +46,22 @@ onMounted(async () => {
       </div>
     </div>
 
-   
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+    
+    <div
+      v-if="loading"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
+    >
+      <div
+        v-for="n in 8"
+        :key="n"
+        class="h-80 bg-gray-200 animate-pulse rounded"
+      />
+    </div>
+
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
+    >
       <ExploreProductCard
         v-for="product in products"
         :key="product.id"
@@ -45,11 +69,14 @@ onMounted(async () => {
       />
     </div>
 
-  
+    
     <div class="text-center mt-12">
       <RouterLink
         to="/store"
-        class="bg-red-500 text-white px-10 py-4 rounded cursor-pointer transition-all duration-200 ease-in-out hover:bg-red-600 hover:scale-105 hover:shadow-lg active:scale-95 active:shadow-sm"
+        class="bg-red-500 text-white px-10 py-4 rounded cursor-pointer
+               transition-all duration-200 ease-in-out
+               hover:bg-red-600 hover:scale-105 hover:shadow-lg
+               active:scale-95 active:shadow-sm"
       >
         View All Products
       </RouterLink>
