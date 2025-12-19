@@ -13,7 +13,7 @@ defineProps({
     class="relative overflow-hidden rounded-lg text-white"
     :class="large ? 'h-full' : 'h-48'"
   >
-    <!-- Image -->
+   
     <img
       :src="image"
       class="absolute inset-0 w-full h-full object-contain"
@@ -21,7 +21,7 @@ defineProps({
 
     
 
-    <!-- Content -->
+    
     <div class="relative z-10 p-6 flex flex-col justify-end h-full">
       <h3 class="text-xl font-semibold mb-1">
         {{ title }}
